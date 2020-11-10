@@ -10,11 +10,6 @@ import store  from './redux/store'
 
 
 
-store.dispatch({ 
-  type: 'SET_SORT_BY',
-  payload: 'price'
-})
-
 
 
 
