@@ -6,47 +6,32 @@ import  logo from './assets/img/pizza-logo.svg';
 import {Header} from './components';  
 import {Home, Card} from './pages';
 
+import {setPizzas} from './redux/actions/pizzas';
+import {useDispatch} from 'react-redux';
 
-import {setPizzas as setPizzasAction} from './redux/actions/pizzas';
-import {connect} from 'react-redux';
+function App ()  {
 
-class App extends React.Component {
-  
-  componentDidMount() { 
-    axios.get("http://localhost:3000/db.json")
-    .then(({data}) => { 
-      this.props.setPizzas(data.pizzas)
+ const dispatch = useDispatch();
+
+  React.useEffect(() => { 
+    axios.get("http://localhost:3001/pizzas")
+    .then(({data}) => {
+     dispatch(setPizzas(data));
     });
-}
+  }, []);
 
-  render () { 
-    return (
-      <div className="wrapper">
-        <Header logo={logo} /> 
+  return (
+    <div className="wrapper">
+      <Header logo={logo} /> 
         <div className="content">
           <div className="container">
-          <Route path='/' exact render={() => <Home items={this.props.items} />} />
+          <Route path='/' exact component={Home} /> 
           <Route path='/card' exact  component={Card} /> 
-          </div>
         </div>
       </div>
-    );
-  };
-};
+    </div>
+  )
+} 
 
-const mapStateToProps = (state) => {
-  return { 
-    items: state.pizzas.items,
-    filters: state.filters
-  }
-};
-
-const mapDispatchToProps = (dispatch) => { 
-  return { 
-    setPizzas: (items) => dispatch(setPizzasAction(items))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
-
+export default App
 
